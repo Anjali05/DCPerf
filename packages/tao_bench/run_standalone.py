@@ -20,18 +20,42 @@ TAO_BENCH_BM_DIR = os.path.join(BENCHPRESS_ROOT, "benchmarks", "tao_bench")
 
 def init_parser():
     parser = argparse.ArgumentParser()
+    
+    # edits
+
     parser.add_argument(
         "--memsize",
         type=int,
-        default=run_autoscale.get_system_memsize_gb(),
+        required=True,  # Make this required
         help="memory size in GB",
     )
     parser.add_argument(
         "--num-servers",
         type=int,
-        default=run_autoscale.get_default_num_servers(),
+        required=True,  # Make this required
         help="number of TaoBench server instances",
     )
+    parser.add_argument(
+        "--num-cores",
+        type=int,
+        required=True,  # Add this new argument
+        help="number of CPU cores available",
+    )
+
+    # original
+    # parser.add_argument(
+    #     "--memsize",
+    #     type=int,
+    #     default=run_autoscale.get_system_memsize_gb(),
+    #     help="memory size in GB",
+    # )
+    # parser.add_argument(
+    #     "--num-servers",
+    #     type=int,
+    #     default=run_autoscale.get_default_num_servers(),
+    #     help="number of TaoBench server instances",
+    # )
+
     parser.add_argument(
         "--fast-threads-ratio",
         type=float,
@@ -88,6 +112,7 @@ def init_parser():
         + "on machines with multiple NUMA nodes in order to minimize cross-socket traffic. "
         + "Please set this to 0 if you would like to test hetereogeneous memory systems such as CXL.",
     )
+
     args = parser.parse_args()
     return args
 
@@ -114,7 +139,7 @@ def launch_server():
         --warmup-time={args.warmup_time} --test-time={args.test_time} \
         --port-number-start={args.port_number_start} --bind-cpu={args.bind_cpu} \
         --bind-mem {args.bind_mem} --memsize={args.memsize} --num-clients={args.num_clients} \
-        --interface-name=lo"
+        --interface-name=lo --num-cores={args.num_cores}"
     stdout, stderr, exitcode = exec_cmd(cmd)
     print(stdout)
 

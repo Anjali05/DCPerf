@@ -19,7 +19,7 @@ diff --git a/README.md b/README.md
 index e5cba78..e9c4f66 100644
 --- a/README.md
 +++ b/README.md
-@@ -61,8 +61,8 @@ $ sudo make install
+@@ -61,8 +61,8 @@ $  make install
  $ popd
  ```
  

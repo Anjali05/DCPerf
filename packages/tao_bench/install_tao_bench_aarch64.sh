@@ -28,7 +28,7 @@ else
 fi
 
 if distro_is_like centos; then
-  sudo dnf install -y cmake autoconf automake \
+   dnf install -y cmake autoconf automake \
     libevent-devel openssl openssl-devel \
     zlib-devel bzip2-devel xz-devel lz4-devel libzstd-devel \
     snappy-devel libaio-devel libunwind-devel patch \
@@ -36,7 +36,7 @@ if distro_is_like centos; then
     gflags-devel-2.2.2 fmt-devel perl libtool pcre-devel \
     git python3-devel ${GLOG_NAME}
 elif distro_is_like ubuntu; then
-  sudo apt install -y cmake autoconf automake flex bison \
+   apt install -y cmake autoconf automake flex bison \
     libevent-dev openssl libssl-dev \
     libzstd-dev lz4 liblz4-dev xzip libsnappy-dev zlib1g-dev bzip2 \
     libaio-dev libunwind-dev patch libghc-double-conversion-dev \
@@ -52,7 +52,7 @@ mkdir -p "${TAO_BENCH_DEPS}"
 pushd "${TAO_BENCH_ROOT}"
 
 if ! [ -f "/usr/local/bin/cmake" ]; then
-    sudo ln -s /usr/bin/cmake /usr/local/bin/cmake
+     ln -s /usr/bin/cmake /usr/local/bin/cmake
 fi
 
 # Install openssl
@@ -126,10 +126,10 @@ fi
 
 # Build and install
 if ! [ -f "/usr/bin/aclocal-1.16" ]; then
-    sudo ln -s /usr/bin/aclocal /usr/bin/aclocal-1.16
+     ln -s /usr/bin/aclocal /usr/bin/aclocal-1.16
 fi
 if ! [ -f "/usr/bin/automake-1.16" ]; then
-    sudo ln -s /usr/bin/automake /usr/bin/automake-1.16
+     ln -s /usr/bin/automake /usr/bin/automake-1.16
 fi
 
 ./configure --with-folly="${FOLLY_INSTALLED_PATH}" --with-fmt="${FMT_INSTALLED_PATH}" \
@@ -138,10 +138,10 @@ fi
 make -j"$(nproc)"
 
 if [ -L /usr/bin/aclocal-1.16 ]; then
-    sudo rm -f /usr/bin/aclocal-1.16
+     rm -f /usr/bin/aclocal-1.16
 fi
 if [ -L /usr/bin/automake-1.16 ]; then
-    sudo rm -f /usr/bin/automake-1.16
+     rm -f /usr/bin/automake-1.16
 fi
 
 cp memcached "${TAO_BENCH_ROOT}/tao_bench_server"

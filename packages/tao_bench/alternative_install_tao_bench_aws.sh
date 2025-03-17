@@ -12,22 +12,22 @@ TAO_BENCH_ROOT="${BENCHPRESS_ROOT}/benchmarks/tao_bench"
 TAO_BENCH_DEPS="${TAO_BENCH_ROOT}/build-deps"
 FOLLY_BUILD_ROOT="${TAO_BENCH_ROOT}/build-folly"
 
-sudo yum install -y gcc gcc-c++ cmake3 autoconf automake \
+ yum install -y gcc gcc-c++ cmake3 autoconf automake \
     libevent-devel openssl openssl-devel \
     zlib-devel bzip2-devel xz-devel lz4-devel libzstd-devel \
     snappy-devel libaio-devel libunwind-devel patch
-sudo yum remove -y libdwarf-devel
+ yum remove -y libdwarf-devel
 
-sudo amazon-linux-extras install -y epel
-sudo yum install -y double-conversion-devel libsodium-devel gflags-devel fmt-devel
-sudo yum remove -y glog-devel
+ amazon-linux-extras install -y epel
+ yum install -y double-conversion-devel libsodium-devel gflags-devel fmt-devel
+ yum remove -y glog-devel
 
 # Installing dependencies
 mkdir -p "${TAO_BENCH_DEPS}"
 pushd "${TAO_BENCH_ROOT}"
 
 if ! [ -f "/usr/local/bin/cmake" ]; then
-    sudo ln -s /usr/bin/cmake3 /usr/local/bin/cmake
+     ln -s /usr/bin/cmake3 /usr/local/bin/cmake
 fi
 
 # Install glog
@@ -41,7 +41,7 @@ if ! [ -d "glog-0.4.0" ]; then
         -DBUILD_TESTING=OFF \
         -DCMAKE_BUILD_TYPE=Release
     make -j"$(nproc)"
-    sudo make install
+     make install
     popd
 else
     echo "[SKIPPED] glog-0.4.0"
@@ -97,10 +97,10 @@ fi
 
 # Build and install
 if ! [ -f "/usr/bin/aclocal-1.16" ]; then
-    sudo ln -s /usr/bin/aclocal /usr/bin/aclocal-1.16
+     ln -s /usr/bin/aclocal /usr/bin/aclocal-1.16
 fi
 if ! [ -f "/usr/bin/automake-1.16" ]; then
-    sudo ln -s /usr/bin/automake /usr/bin/automake-1.16
+     ln -s /usr/bin/automake /usr/bin/automake-1.16
 fi
 
 ./configure --with-folly="${FOLLY_INSTALLED_PATH}" --with-fmt="${FMT_INSTALLED_PATH}" \
@@ -109,10 +109,10 @@ fi
 make -j"$(nproc)"
 
 if [ -L /usr/bin/aclocal-1.16 ]; then
-    sudo rm -f /usr/bin/aclocal-1.16
+     rm -f /usr/bin/aclocal-1.16
 fi
 if [ -L /usr/bin/automake-1.16 ]; then
-    sudo rm -f /usr/bin/automake-1.16
+     rm -f /usr/bin/automake-1.16
 fi
 
 cp memcached "${TAO_BENCH_ROOT}/tao_bench_server"

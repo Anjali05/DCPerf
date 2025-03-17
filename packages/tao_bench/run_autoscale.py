@@ -95,17 +95,18 @@ def compose_server_cmd(args, cpu_core_range, memsize, port_number):
         "--test-time",
         str(args.test_time),
     ]
-    if len(NUMA_NODES) > 1 and (args.bind_cpu > 0 or args.bind_mem > 0):
-        numa_nodes_belong_to = check_nodes_of_cpu_range(cpu_core_range, NUMA_NODES)
-        nodelist = ",".join(numa_nodes_belong_to)
-        numactl_cmd = ["numactl"]
-        if args.bind_cpu:
-            numactl_cmd += ["--cpunodebind", nodelist]
-        if args.bind_mem:
-            numactl_cmd += ["--membind", nodelist]
-        cmd = numactl_cmd + cmd
-    if args.real:
-        cmd.append("--real")
+    #edits 
+    # if len(NUMA_NODES) > 1 and (args.bind_cpu > 0 or args.bind_mem > 0):
+    #     numa_nodes_belong_to = check_nodes_of_cpu_range(cpu_core_range, NUMA_NODES)
+    #     nodelist = ",".join(numa_nodes_belong_to)
+    #     numactl_cmd = ["numactl"]
+    #     if args.bind_cpu:
+    #         numactl_cmd += ["--cpunodebind", nodelist]
+    #     if args.bind_mem:
+    #         numactl_cmd += ["--membind", nodelist]
+    #     cmd = numactl_cmd + cmd
+    # if args.real:
+    #     cmd.append("--real")
     return cmd
 
 
@@ -247,9 +248,26 @@ def distribute_cores(n_parts):
         core_ranges.append(list2ranges(cores_to_alloc))
     return core_ranges
 
+#edits
+def distribute_cores(n_parts, num_cores):
+    core_ranges = []
+    portion = num_cores // n_parts
+    remaining_cores = num_cores - portion * n_parts
+
+    core_start_idx = 0
+    for i in range(n_parts):
+        extra = 1 if remaining_cores > 0 else 0
+        cores_to_alloc = list(range(core_start_idx, core_start_idx + portion + extra))
+        remaining_cores -= extra
+        core_start_idx += portion + extra
+        core_ranges.append(list2ranges(cores_to_alloc))
+    return core_ranges
 
 def run_server(args):
-    core_ranges = distribute_cores(args.num_servers)
+    # core_ranges = distribute_cores(args.num_servers)
+
+    # edits
+    core_ranges = distribute_cores(args.num_servers, args.num_cores)
     # memory size - split evenly for each server
     n_mem = int(args.memsize)
     mem_per_inst = n_mem // args.num_servers
