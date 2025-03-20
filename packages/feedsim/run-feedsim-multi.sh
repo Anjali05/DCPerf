@@ -30,7 +30,18 @@ PIDS=()
 function get_cpu_range() {
     total_instances="$1"
     inst_id="$2"
-    has_smt="$(cat /sys/devices/system/cpu/smt/active)"
+    # has_smt="$(cat /sys/devices/system/cpu/smt/active)"
+
+    # Check if the file /sys/devices/system/cpu/smt/active exists
+    if [ ! -f /sys/devices/system/cpu/smt/active ]; then
+        has_smt=0
+    else
+        # Read the value from /sys/devices/system/cpu/smt/active
+        has_smt="$(cat /sys/devices/system/cpu/smt/active)"
+    fi
+
+
+
 
     NPROC="$(nproc)"
     if [ "$has_smt" -eq 1 ]; then

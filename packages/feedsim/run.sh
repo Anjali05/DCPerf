@@ -27,7 +27,16 @@ FEEDSIM_ROOT_SRC="${FEEDSIM_ROOT}/src"
 
 # Thrift threads: scale with logical CPUs till 216. Having more than that
 # will risk running out of memory and getting killed
-IS_SMT_ON="$(cat /sys/devices/system/cpu/smt/active)"
+# IS_SMT_ON="$(cat /sys/devices/system/cpu/smt/active)"
+
+# Check if the file /sys/devices/system/cpu/smt/active exists
+if [ ! -f /sys/devices/system/cpu/smt/active ]; then
+    IS_SMT_ON=0
+else
+    # Read the value from /sys/devices/system/cpu/smt/active
+    IS_SMT_ON="$(cat /sys/devices/system/cpu/smt/active)"
+fi
+
 THRIFT_THREADS_DEFAULT="$(echo "${BC_MIN_FN}; min($(nproc), 216)" | bc)"
 EVENTBASE_THREADS_DEFAULT=4  # 4 should suffice. Tune up if threads are saturated.
 SRV_THREADS_DEFAULT=8        # 8 should also suffice for most purposes
